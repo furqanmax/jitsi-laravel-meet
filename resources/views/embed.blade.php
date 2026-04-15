@@ -1,4 +1,7 @@
-<div id="jitsi"></div>
+<div id="jitsi" style=" top:0;
+    left:0;
+    width:100%;
+    height:100%;"></div>
 
 <!-- ✅ Loader -->
 <div id="jitsi-loader" style="
