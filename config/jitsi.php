@@ -1,33 +1,30 @@
 <?php
 
 return [
-    'url' => env('JITSI_URL', 'meet.eshare.ai'),
 
-    'redirect_url' => env('JITSI_REDIRECT_URL', '/'),
+    'domain' => env('JITSI_DOMAIN', 'meet.jit.si'),
 
-    'timer_sync_interval' => env('JITSI_TIMER_SYNC_INTERVAL', 1000),
-
-    'warning_thresholds' => [
-        'yellow' => env('JITSI_WARNING_YELLOW_SECONDS', 300),
-        'red' => env('JITSI_WARNING_RED_SECONDS', 120),
+    'configOverwrite' => [
+        'prejoinPageEnabled' => env('JITSI_PREJOIN_ENABLED', false),
+        'prejoinConfig' => [
+            'enabled' => env('JITSI_PREJOIN_ENABLED', false),
+        ],
+        'disableDeepLinking' => env('JITSI_DEEP_LINKING', true),
+        'startWithAudioMuted' => env('JITSI_START_AUDIO', false),
+        'startWithVideoMuted' => env('JITSI_START_VIDEO', false),
     ],
 
-    'meeting_model' => env('JITSI_MEETING_MODEL', null),
-
-    'authorize' => env('JITSI_AUTHORIZE', true),
-
-    'check_user_meeting' => env('JITSI_CHECK_USER_MEETING', true),
-
-    'interface_config' => [
+    'interfaceConfigOverwrite' => [
         'SHOW_CHROME_EXTENSION_BANNER' => false,
-        'TOOLBAR_BUTTONS' => ['microphone', 'camera', 'hangup', 'chat'],
+        'TOOLBAR_BUTTONS' => array_map(
+            'trim',
+            explode(',', env('JITSI_TOOLBAR_BUTTONS', 'microphone,camera,hangup,chat'))
+        ),
     ],
 
-    'config_overwrite' => [
-        'prejoinPageEnabled' => false,
-        'prejoinConfig' => ['enabled' => false],
-        'disableDeepLinking' => true,
-        'startWithAudioMuted' => false,
-        'startWithVideoMuted' => false,
+    'timer' => [
+        'warning_yellow' => env('JITSI_WARNING_YELLOW', 300),
+        'warning_red' => env('JITSI_WARNING_RED', 60),
     ],
+
 ];
