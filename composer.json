@@ -1,5 +1,5 @@
 {
-    "name": "furqanamx/jitsi-laravel-meet",
+    "name": "furqan/jitsi-laravel-meet",
     "description": "Laravel package for Jitsi Meet integration with timer support",
     "type": "library",
     "license": "MIT",

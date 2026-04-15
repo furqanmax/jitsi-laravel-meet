@@ -12,7 +12,7 @@ Laravel package for Jitsi Meet integration with real-time server-side timer cont
 ### 1. Require the Package
 
 ```bash
-composer require furqanamx/jitsi-laravel-meet
+composer require furqan/jitsi-laravel-meet
 ```
 
 The package will auto-discover and register the service provider.
