@@ -9,9 +9,10 @@
 (function() {
     const MEETING_CODE = "{{ $meetingCode }}";
     const USER_NAME = "{{ $userName }}";
-    const TIME_API_URL = "{{ $timeApiUrl }}";
     const REDIRECT_URL = "{{ $redirectUrl }}";
-    const TIMER_SYNC_INTERVAL = {{ $timerSyncInterval }};
+
+    const START_TIME = {{ $startTime }};
+    const END_TIME   = {{ $endTime }};
 
     const WARNING_YELLOW = {{ $warningYellow }};
     const WARNING_RED = {{ $warningRed }};
@@ -22,89 +23,91 @@
         height: "100vh",
         parentNode: document.querySelector('#jitsi'),
         userInfo: { displayName: USER_NAME },
-        configOverwrite: @json($configOverwrite),
-        interfaceConfigOverwrite: @json($interfaceConfig),
+         configOverwrite: {
+                    prejoinPageEnabled : false,
+                    prejoinConfig      : { enabled: false },
+                    disableDeepLinking : true,
+                    startWithAudioMuted: false,
+                    startWithVideoMuted: false,
+                },
+                interfaceConfigOverwrite: {
+                    SHOW_CHROME_EXTENSION_BANNER: false,
+                    TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup', 'chat'],
+                },
     });
 
     const timerDisplay = document.getElementById('timer-display');
     const timerBox = document.getElementById('meeting-timer');
-    let timerInterval;
+
     let meetingEnded = false;
 
-    function pad(n) { return String(n).padStart(2, '0'); }
+    function pad(n) {
+        return String(n).padStart(2, '0');
+    }
 
     function endMeeting(label) {
         if (meetingEnded) return;
+
         meetingEnded = true;
-        clearInterval(timerInterval);
         api.executeCommand('hangup');
         timerDisplay.textContent = label;
-        setTimeout(() => { window.location.href = REDIRECT_URL; }, 2000);
+
+        setTimeout(() => {
+            window.location.href = REDIRECT_URL;
+        }, 2000);
     }
 
-    async function syncWithServer() {
+    function updateTimer() {
         if (meetingEnded) return;
 
-        try {
-            const res = await fetch(TIME_API_URL, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                }
-            });
+        const now = Math.floor(Date.now() / 1000);
 
-            if (res.status === 403) {
-                endMeeting('Removed from meeting');
-                return;
-            }
+        const beforeStart = START_TIME - now;
+        const remaining   = END_TIME - now;
 
-            if (res.status === 404) {
-                endMeeting('Meeting not found');
-                return;
-            }
+        // ── Before meeting ──
+        if (beforeStart > 0) {
+            const m = Math.floor(beforeStart / 60);
+            const s = beforeStart % 60;
 
-            const data = await res.json();
-            const remaining = data.remaining_seconds;
-            const beforeStart = data.before_start_seconds;
+            timerDisplay.textContent = 'Starts in ' + pad(m) + ':' + pad(s);
+            timerBox.style.background = 'rgba(0,0,0,0.75)';
+            return;
+        }
 
-            if (beforeStart > 0) {
-                const wm = Math.floor(beforeStart / 60), ws = beforeStart % 60;
-                timerDisplay.textContent = 'Starts in ' + pad(wm) + ':' + pad(ws);
-                timerBox.style.background = 'rgba(0,0,0,0.75)';
-                return;
-            }
+        // ── Meeting ended ──
+        if (remaining <= 0) {
+            endMeeting('Time is up!');
+            return;
+        }
 
-            if (remaining <= 0) {
-                endMeeting('Time is up! Redirecting');
-                return;
-            }
+        // ── Countdown ──
+        const hours = Math.floor(remaining / 3600);
+        const mins  = Math.floor((remaining % 3600) / 60);
+        const secs  = remaining % 60;
 
-            const hours = Math.floor(remaining / 3600);
-            const mins = Math.floor((remaining % 3600) / 60);
-            const secs = remaining % 60;
+        timerDisplay.textContent = hours
+            ? pad(hours) + ':' + pad(mins) + ':' + pad(secs) + ' left'
+            : pad(mins) + ':' + pad(secs) + ' left';
 
-            timerDisplay.textContent = hours
-                ? pad(hours) + ':' + pad(mins) + ':' + pad(secs) + ' left'
-                : pad(mins) + ':' + pad(secs) + ' left';
-
-            if (remaining <= WARNING_RED) {
-                timerBox.style.background = 'rgba(220,38,38,0.85)';
-            } else if (remaining <= WARNING_YELLOW) {
-                timerBox.style.background = 'rgba(234,179,8,0.85)';
-            } else {
-                timerBox.style.background = 'rgba(0,0,0,0.75)';
-            }
-        } catch (err) {
-            console.warn('Timer sync failed, retrying...', err);
+        // ── Warning colors ──
+        if (remaining <= WARNING_RED) {
+            timerBox.style.background = 'rgba(220,38,38,0.85)';
+        } else if (remaining <= WARNING_YELLOW) {
+            timerBox.style.background = 'rgba(234,179,8,0.85)';
+        } else {
+            timerBox.style.background = 'rgba(0,0,0,0.75)';
         }
     }
 
-    syncWithServer();
-    timerInterval = setInterval(syncWithServer, TIMER_SYNC_INTERVAL);
+    // Run every second
+    updateTimer();
+    setInterval(updateTimer, 1000);
 
+    // ── Manual hangup ──
     api.addEventListener('readyToClose', () => {
-        clearInterval(timerInterval);
         window.location.href = REDIRECT_URL;
     });
+
 })();
 </script>
