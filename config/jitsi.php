@@ -4,6 +4,8 @@ return [
 
     'domain' => env('JITSI_DOMAIN', 'meet.jit.si'),
 
+    'redirect_url' => env('JITSI_REDIRECT_URL', '/'),
+
     'configOverwrite' => [
         'prejoinPageEnabled' => env('JITSI_PREJOIN_ENABLED', false),
         'prejoinConfig' => [
