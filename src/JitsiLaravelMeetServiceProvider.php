@@ -1,9 +1,9 @@
 <?php
 
-namespace Furqanamx\JitsiLaravelMeet;
+namespace Furqan\JitsiLaravelMeet;
 
 use Illuminate\Support\ServiceProvider;
-use Furqanamx\JitsiLaravelMeet\View\Components\JitsiEmbed;
+use Furqan\JitsiLaravelMeet\View\Components\JitsiEmbed;
 
 class JitsiLaravelMeetServiceProvider extends ServiceProvider
 {

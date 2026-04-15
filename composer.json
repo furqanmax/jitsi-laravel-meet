@@ -27,7 +27,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Furqanamx\\JitsiLaravelMeet\\JitsiLaravelMeetServiceProvider"
+                "Furqan\\JitsiLaravelMeet\\JitsiLaravelMeetServiceProvider"
             ]
         }
     },
