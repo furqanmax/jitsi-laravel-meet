@@ -5,13 +5,13 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Furqanamx\\JitsiLaravelMeet\\": "src/"
+            "Furqan\\JitsiLaravelMeet\\": "src/"
         }
     },
     "authors": [
         {
             "name": "furqan",
-            "email": "furqan@bizionictech.com"
+            "email": "furqanmax27@gmail.com"
         }
     ],
     "require": {
