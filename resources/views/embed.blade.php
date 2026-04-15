@@ -91,11 +91,17 @@
         if (meetingEnded) return;
 
         meetingEnded = true;
-        api.executeCommand('hangup');
+
+        try {
+            api.executeCommand('hangup');
+        } catch (e) {}
+
         timerDisplay.textContent = label;
 
         setTimeout(() => {
-            window.location.href = REDIRECT_URL;
+            if (REDIRECT_URL && window.location.href !== REDIRECT_URL) {
+                window.location.href = REDIRECT_URL;
+            }
         }, 2000);
     }
 

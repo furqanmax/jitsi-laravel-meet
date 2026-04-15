@@ -33,7 +33,7 @@ This publishes:
 Add to your `.env` file:
 
 ```env
-JITSI_URL=meet.eshare.ai
+JITSI_DOMAIN=meet.eshare.ai
 JITSI_REDIRECT_URL=/
 ```
 
@@ -60,6 +60,16 @@ In your Blade view:
     'userName'    => $userName,
     'startTime'   => $startTime,
     'endTime'     => $endTime,
+])
+```
+
+example
+```blade
+@include('vendor.jitsi.embed', [
+    'meetingCode' => 'test-meeting-12345',
+    'userName'    => 'John Doe',
+    'startTime'   => time(),
+    'endTime'     => time() + 1800,
 ])
 ```
 
