@@ -58,7 +58,7 @@
 
     const loader = document.getElementById('jitsi-loader');
 
-    const api = new JitsiMeetExternalAPI("{{ $jitsiUrl }}", {
+    const api = new JitsiMeetExternalAPI("{{ config('jitsi.domain') }}", {
         roomName: MEETING_CODE,
         width: "100%",
         height: "100vh",

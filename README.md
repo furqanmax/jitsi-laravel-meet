@@ -55,7 +55,12 @@ JITSI_REDIRECT_URL=/
 In your Blade view:
 
 ```blade
-@include('vendor.jitsi.embed')
+@include('vendor.jitsi.embed', [
+    'meetingCode' => $meetingCode,
+    'userName'    => $userName,
+    'startTime'   => $startTime,
+    'endTime'     => $endTime,
+])
 ```
 
 ## How It Works
