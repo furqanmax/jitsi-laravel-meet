@@ -27,10 +27,10 @@ class JitsiLaravelMeetServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/views' => resource_path('views/vendor/jitsi'),
         ], 'jitsi-views');
 
-        $this->loadRoutesFrom(__DIR__ . '/../routes/jitsi.php');
+        // $this->loadRoutesFrom(__DIR__ . '/../routes/jitsi.php');
 
-        $this->loadViewComponentsAs('jitsi', [
-            JitsiEmbed::class,
-        ]);
+        // $this->loadViewComponentsAs('jitsi', [
+        //     JitsiEmbed::class,
+        // ]);
     }
 }
